@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:free_images/bloc/pixabay/bloc/pixabay_bloc.dart';
+import 'package:free_images/route/image_route.gr.dart';
 import 'package:free_images/ui/pixabay/pixabay_image_widget.dart';
 import 'package:free_images/ui/widget/empty_widget.dart';
 import 'package:free_images/ui/widget/error_widget.dart';
@@ -34,6 +36,10 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget>
       child: Scaffold(
         body: Column(
           children: [
+            RaisedButton(
+              onPressed: () => ExtendedNavigator.of(context)
+                  .pushNamed(Routes.pixabayMainWidget),
+            ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               padding: EdgeInsets.all(8),

@@ -10,15 +10,18 @@ import 'package:auto_route/auto_route.dart';
 import 'package:free_images/ui/home_tab/home_tab.dart';
 import 'package:free_images/ui/pixabay/pixabay_search_widget.dart';
 import 'package:free_images/ui/widget/view_image_widget.dart';
+import 'package:free_images/ui/pixabay/pixabay_main_widget.dart';
 
 abstract class Routes {
   static const homeTab = '/';
   static const pixabaySearchWidget = '/pixabay-search-widget';
   static const viewImageWidget = '/view-image-widget';
+  static const pixabayMainWidget = '/pixabay-main-widget';
   static const all = {
     homeTab,
     pixabaySearchWidget,
     viewImageWidget,
+    pixabayMainWidget,
   };
 }
 
@@ -55,6 +58,11 @@ class ImageRouter extends RouterBase {
               key: typedArgs.key,
               heroTag: typedArgs.heroTag,
               url: typedArgs.url),
+          settings: settings,
+        );
+      case Routes.pixabayMainWidget:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => PixabayMainWidget(),
           settings: settings,
         );
       default:
