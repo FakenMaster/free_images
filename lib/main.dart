@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Free Images',
       builder: (context, child) => Theme(
         data: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         child: ExtendedNavigator<ImageRouter>(router: ImageRouter()),

@@ -12,16 +12,14 @@ class PixabaySearchWidget extends StatefulWidget {
   _PixabaySearchWidgetState createState() => _PixabaySearchWidgetState();
 }
 
-class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
+class _PixabaySearchWidgetState extends State<PixabaySearchWidget>
+    with AutomaticKeepAliveClientMixin {
   PixabayBloc bloc;
 
   @override
   void initState() {
     super.initState();
     bloc = PixabayBloc();
-    Future.delayed(Duration(seconds: 2),(){
-      bloc.search("");
-    });
   }
 
   @override
@@ -32,13 +30,38 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pixabay'),
-      ),
-      body: StreamBuilder<PixabayState>(
-        stream: bloc.stream,
-        builder: (context, snapshot) => _buildChild(snapshot.data),
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[300],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      autofocus: false,
+                      style: TextStyle(fontSize: 20, color: Colors.green[200]),
+                      decoration: InputDecoration(),
+                      onChanged: bloc.search,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder<PixabayState>(
+                stream: bloc.stream,
+                builder: (context, snapshot) => _buildChild(snapshot.data),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -50,13 +73,14 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
       return LoadingWidget();
     } else if (state is PixabayEmptyState) {
       return EmptyWidget();
-    } 
-    else if(state is PixabayErrorState){
+    } else if (state is PixabayErrorState) {
       return SearchErrorWidget();
-    }
-    else if (state is PixabayResultState) {
+    } else if (state is PixabayResultState) {
       return PixabayImageWidget(state.data);
-    } 
+    }
     return Container();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

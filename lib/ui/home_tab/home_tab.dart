@@ -30,6 +30,7 @@ class _HomeTabWidgetState extends State<HomeTabWidget> {
     return Scaffold(
       body: PageView.builder(
         controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           if (index == 0) {
             return PixabaySearchWidget();

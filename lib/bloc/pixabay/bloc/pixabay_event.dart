@@ -12,5 +12,5 @@ class PixabaySearchEvent extends PixabayEvent {
   PixabaySearchEvent({this.searchImage = true,this.term, this.page});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [searchImage,term,page];
 }
