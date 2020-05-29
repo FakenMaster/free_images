@@ -35,8 +35,8 @@ class PixabayBloc {
     }).startWith(PixabayInitial());
   }
 
-  search(String term, {bool searchImage = true}) {
-    _onTextChange.add(PixabaySearchEvent(searchImage: searchImage, term: term));
+  search(String term, {bool searchImage = true,int page = 1}) {
+    _onTextChange.add(PixabaySearchEvent(searchImage: searchImage, term: term,page: page));
   }
 
   Stream<PixabayState> _search(PixabayEvent event) async* {
@@ -45,7 +45,7 @@ class PixabayBloc {
 
       try {
         var result = await (event.searchImage
-            ? _pixabayRepository.searchImage(q: event.term)
+            ? _pixabayRepository.searchImage(q: event.term,page: event.page)
             : _pixabayRepository.searchVideo());
         if (result.hits?.isNotEmpty ?? false) {
           yield PixabayResultState(result);

@@ -1,6 +1,7 @@
 import 'package:free_images/api/pixabay/pixabay_api.dart';
 import 'package:free_images/model/pixabay/image_item.dart';
 import 'package:free_images/model/pixabay/pixabay_model.dart';
+import 'package:free_images/model/pixabay/video_item.dart';
 
 class PixabayRepository {
   final PixabayApi pixabayApi;
@@ -21,7 +22,7 @@ class PixabayRepository {
           page: page,
           perPage: perPage);
 
-  Future<PixabayModel<ImageItem>> searchVideo({
+  Future<PixabayModel<VideoItem>> searchVideo({
     String q,
     String lang,
     String id,
@@ -29,7 +30,7 @@ class PixabayRepository {
     int page,
     int perPage,
   }) async =>
-      pixabayApi.searchImage(
+      pixabayApi.searchVideo(
           q: q,
           lang: lang,
           id: id,
