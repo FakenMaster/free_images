@@ -5,32 +5,28 @@ import 'package:free_images/model/pixabay/video_item.dart';
 
 class PixabayRepository {
   final PixabayApi pixabayApi;
+
   PixabayRepository(this.pixabayApi);
+
   Future<PixabayModel<ImageItem>> searchImage({
     String q,
     String lang,
     String id,
     bool popular = true,
+    bool editorChoice = false,
     int page,
     int perPage,
+    String category,
   }) async {
-    for (String category in PixabayApi.categories) {
-      pixabayApi.searchImage(
-          q: q,
-          lang: lang,
-          id: id,
-          popular: popular,
-          page: page,
-          perPage: perPage,
-          category: category);
-    }
     return pixabayApi.searchImage(
         q: q,
         lang: lang,
         id: id,
         popular: popular,
         page: page,
-        perPage: perPage);
+        perPage: perPage,
+        category: category,
+        editorChoice: editorChoice);
   }
 
   Future<PixabayModel<VideoItem>> searchVideo({

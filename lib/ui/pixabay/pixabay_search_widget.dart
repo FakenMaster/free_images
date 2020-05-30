@@ -26,7 +26,7 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget>
 
   @override
   void dispose() {
-    bloc.dipose();
+    bloc.dispose();
     super.dispose();
   }
 
@@ -54,7 +54,9 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget>
                       autofocus: false,
                       style: TextStyle(fontSize: 20, color: Colors.green[200]),
                       decoration: InputDecoration(),
-                      onChanged: bloc.search,
+                      onChanged: (String text) {
+                        bloc.search(term: text);
+                      },
                     ),
                   ),
                 ],

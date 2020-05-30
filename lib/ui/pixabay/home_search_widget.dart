@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +24,13 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
   void initState() {
     super.initState();
     bloc = PixabayBloc();
-    Future.delayed(Duration(seconds: 1)).then((value) => bloc.search(''));
+    //Future.delayed(Duration(seconds: 1)).then((value) => bloc.search());
     behaviorSubject = BehaviorSubject.seeded(0);
   }
 
   @override
   void dispose() {
-    bloc.dipose();
+    bloc.dispose();
     behaviorSubject.close();
     super.dispose();
   }

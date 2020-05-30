@@ -24,19 +24,37 @@ class PixabayBloc {
   PublishSubject<PixabayEvent> _onTextChange;
   Stream<PixabayState> stream;
   PixabayRepository _pixabayRepository;
+
   PixabayBloc() {
     _pixabayRepository = PixabayRepository(PixabayApi.getInstance());
     _onTextChange = PublishSubject<PixabayEvent>();
     stream = _onTextChange
-        .distinct()
+        .distinct((previous, next) {
+          print('之前：$previous');
+          print('之后：$next');
+          return previous == next;
+        })
         .debounceTime(Duration(milliseconds: 500))
         .switchMap<PixabayState>((event) {
-      return _search(event);
-    }).startWith(PixabayInitial());
+          return _search(event);
+        })
+        .startWith(PixabayInitial());
   }
 
-  search(String term, {bool searchImage = true,int page = 1}) {
-    _onTextChange.add(PixabaySearchEvent(searchImage: searchImage, term: term,page: page));
+  search(
+      {String term,
+      bool searchImage = true,
+      int page = 1,
+      bool editorChoice = false,
+      bool popular = true,
+      String category}) {
+    _onTextChange.add(PixabaySearchEvent(
+        searchImage: searchImage,
+        term: term,
+        page: page,
+        editorChoice: editorChoice,
+        popular: popular,
+        category: category));
   }
 
   Stream<PixabayState> _search(PixabayEvent event) async* {
@@ -45,7 +63,13 @@ class PixabayBloc {
 
       try {
         var result = await (event.searchImage
-            ? _pixabayRepository.searchImage(q: event.term,page: event.page)
+            ? _pixabayRepository.searchImage(
+                q: event.term,
+                page: event.page,
+                editorChoice: event.editorChoice,
+                popular: event.popular,
+                category: event.category,
+              )
             : _pixabayRepository.searchVideo());
         if (result.hits?.isNotEmpty ?? false) {
           yield PixabayResultState(result);
@@ -58,7 +82,7 @@ class PixabayBloc {
     }
   }
 
-  void dipose() {
+  void dispose() {
     _onTextChange?.close();
   }
 }

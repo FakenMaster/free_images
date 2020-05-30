@@ -55,6 +55,7 @@ class PixabayApi {
     int page,
     int perPage,
     String category,
+    bool editorChoice = false,
   }) async {
     try {
       Map<String, dynamic> params = {
@@ -66,7 +67,7 @@ class PixabayApi {
         "order": popular ? 'popular' : 'latest',
         'page': page ?? 1,
         'per_page': perPage ?? 20,
-        'editors_choice': false,
+        'editors_choice': editorChoice,
         'category': category ?? '',
       };
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:free_images/api/pixabay/pixabay_api.dart';
+import 'package:free_images/util/styles.dart';
 import 'package:free_images/util/util.dart';
 
 class CategoryWidget extends StatelessWidget {
@@ -13,7 +14,7 @@ class CategoryWidget extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 8, top: 10, bottom: 2),
-              color: Color(0xff585858),
+              color: PixabayStyles.colorLight,
               width: double.infinity,
               child: Text(
                 'Categories',
@@ -32,28 +33,33 @@ class CategoryWidget extends StatelessWidget {
                   mainAxisSpacing: 4,
                   children: <Widget>[
                     for (String category in PixabayApi.categories)
-                      Stack(
-                        children: <Widget>[
-                          Positioned.fill(
-                            child: Image.asset(
-                              'assets/images/category_$category.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                      Material(
+                        child: InkWell(
+                          onTap: () {},
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned.fill(
+                                child: Image.asset(
+                                  'assets/images/category_$category.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                    width: double.infinity,
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: Text(
+                                      category.capitalize(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    )),
+                              )
+                            ],
                           ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                                width: double.infinity,
-                                color: Colors.black.withOpacity(0.4),
-                                child: Text(
-                                  category.capitalize(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                )),
-                          )
-                        ],
+                        ),
                       )
                   ],
                 ),
