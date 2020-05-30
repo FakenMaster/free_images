@@ -11,6 +11,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Free Images',
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       builder: (context, child) => Theme(
         data: ThemeData(
           primarySwatch: Colors.green,

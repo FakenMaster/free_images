@@ -1,15 +1,41 @@
+import 'dart:convert' as convert;
+
 import 'package:free_images/model/pixabay/image_item.dart';
 import 'package:free_images/model/pixabay/pixabay_model.dart';
 import 'package:free_images/model/pixabay/video_item.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
 class PixabayApi {
   final baseUrl = "https://pixabay.com";
   final key = "10571224-09a118652b9cca8d9e39ee28b";
+
   PixabayApi._internal();
 
+  static final List<String> categories = [
+    "animals",
+    "backgrounds",
+    "buildings",
+    "business",
+    "computer",
+    "education",
+    "fashion",
+    "feelings",
+    "food",
+    "health",
+    "industry",
+    "music",
+    "nature",
+    "people",
+    "places",
+    "religion",
+    "science",
+    "sports",
+    "transportation",
+    "travel",
+  ];
+
   static PixabayApi _instance;
+
   static PixabayApi _getInstance() {
     return PixabayApi._internal();
   }
@@ -28,6 +54,7 @@ class PixabayApi {
     bool popular = true,
     int page,
     int perPage,
+    String category,
   }) async {
     try {
       Map<String, dynamic> params = {
@@ -38,7 +65,9 @@ class PixabayApi {
         "id": id ?? '',
         "order": popular ? 'popular' : 'latest',
         'page': page ?? 1,
-        'per_page': perPage ?? 20
+        'per_page': perPage ?? 20,
+        'editors_choice': false,
+        'category': category ?? '',
       };
 
       String paramsString = "key=$key";
@@ -47,7 +76,7 @@ class PixabayApi {
       });
 
       String url = "$baseUrl/api/?$paramsString";
-      print(url);
+      print('类型 $category: $url');
       var response = await http.get(url);
       if (response.statusCode == 200) {
         var json = convert.jsonDecode(response.body);
@@ -69,7 +98,7 @@ class PixabayApi {
     int perPage,
   }) async {
     try {
-       Map<String, dynamic> params = {
+      Map<String, dynamic> params = {
         //"key": key,
         "q": q ?? '',
         //cs, da, de, en, es, fr, id, it, hu, nl, no, pl, pt, ro, sk, fi, sv, tr, vi, th, bg, ru, el, ja, ko, zh

@@ -13,14 +13,25 @@ class PixabayRepository {
     bool popular = true,
     int page,
     int perPage,
-  }) async =>
+  }) async {
+    for (String category in PixabayApi.categories) {
       pixabayApi.searchImage(
           q: q,
           lang: lang,
           id: id,
           popular: popular,
           page: page,
-          perPage: perPage);
+          perPage: perPage,
+          category: category);
+    }
+    return pixabayApi.searchImage(
+        q: q,
+        lang: lang,
+        id: id,
+        popular: popular,
+        page: page,
+        perPage: perPage);
+  }
 
   Future<PixabayModel<VideoItem>> searchVideo({
     String q,

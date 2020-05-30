@@ -32,38 +32,35 @@ class _PixabayMainWidgetState extends State<PixabayMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff2ecc71),
-      body: Stack(
-        children: [
-          PageView(
-            controller: pageController,
-            children: [
-              EditorChoiceWidget(),
-              HomeSearchWidget(),
-              CategoryWidget(),
-            ],
-            onPageChanged: (index) {
-              indexController.add(index);
+    return Stack(
+      children: [
+        PageView(
+          controller: pageController,
+          children: [
+            EditorChoiceWidget(),
+            HomeSearchWidget(),
+            CategoryWidget(),
+          ],
+          onPageChanged: (index) {
+            indexController.add(index);
+          },
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: StreamBuilder(
+            stream: indexController.stream,
+            builder: (context, snapshot) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: PageIndicator(
+                  count: 3,
+                  selectedIndex: snapshot.data,
+                ),
+              );
             },
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: StreamBuilder(
-              stream: indexController.stream,
-              builder: (context, snapshot) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: PageIndicator(
-                    count: 3,
-                    selectedIndex: snapshot.data,
-                  ),
-                );
-              },
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }
