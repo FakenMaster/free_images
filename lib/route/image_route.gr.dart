@@ -8,20 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:free_images/ui/home_tab/home_tab.dart';
-import 'package:free_images/ui/pixabay/pixabay_search_widget.dart';
+import 'package:free_images/ui/pixabay/pixabay_tab_widget.dart';
 import 'package:free_images/ui/widget/view_image_widget.dart';
 import 'package:free_images/ui/pixabay/pixabay_main_widget.dart';
+import 'package:free_images/ui/pixabay/pixabay_search_widget.dart';
 
 abstract class Routes {
   static const homeTab = '/';
-  static const pixabaySearchWidget = '/pixabay-search-widget';
+  static const pixabayTabWidget = '/pixabay-tab-widget';
   static const viewImageWidget = '/view-image-widget';
   static const pixabayMainWidget = '/pixabay-main-widget';
+  static const pixabaySearchWidget = '/pixabay-search-widget';
   static const all = {
     homeTab,
-    pixabaySearchWidget,
+    pixabayTabWidget,
     viewImageWidget,
     pixabayMainWidget,
+    pixabaySearchWidget,
   };
 }
 
@@ -42,9 +45,9 @@ class ImageRouter extends RouterBase {
           builder: (context) => HomeTabWidget(),
           settings: settings,
         );
-      case Routes.pixabaySearchWidget:
+      case Routes.pixabayTabWidget:
         return MaterialPageRoute<dynamic>(
-          builder: (context) => PixabaySearchWidget(),
+          builder: (context) => PixabayTabWidget(),
           settings: settings,
         );
       case Routes.viewImageWidget:
@@ -57,12 +60,26 @@ class ImageRouter extends RouterBase {
           builder: (context) => ViewImageWidget(
               key: typedArgs.key,
               heroTag: typedArgs.heroTag,
-              url: typedArgs.url),
+              url: typedArgs.url,
+              previewUrl: typedArgs.previewUrl),
           settings: settings,
         );
       case Routes.pixabayMainWidget:
         return MaterialPageRoute<dynamic>(
           builder: (context) => PixabayMainWidget(),
+          settings: settings,
+        );
+      case Routes.pixabaySearchWidget:
+        if (hasInvalidArgs<PixabaySearchWidgetArguments>(args)) {
+          return misTypedArgsRoute<PixabaySearchWidgetArguments>(args);
+        }
+        final typedArgs = args as PixabaySearchWidgetArguments ??
+            PixabaySearchWidgetArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => PixabaySearchWidget(
+              key: typedArgs.key,
+              term: typedArgs.term,
+              category: typedArgs.category),
           settings: settings,
         );
       default:
@@ -80,5 +97,14 @@ class ViewImageWidgetArguments {
   final Key key;
   final Object heroTag;
   final String url;
-  ViewImageWidgetArguments({this.key, this.heroTag, this.url});
+  final String previewUrl;
+  ViewImageWidgetArguments({this.key, this.heroTag, this.url, this.previewUrl});
+}
+
+//PixabaySearchWidget arguments holder class
+class PixabaySearchWidgetArguments {
+  final Key key;
+  final String term;
+  final String category;
+  PixabaySearchWidgetArguments({this.key, this.term, this.category});
 }

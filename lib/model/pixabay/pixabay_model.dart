@@ -30,7 +30,7 @@ class _Converter<T> implements JsonConverter<T, Object> {
 
   @override
   T fromJson(Object json) {
-    print("json的类型：${json.runtimeType},内容：$json");
+    //print("json的类型：${json.runtimeType},内容：$json");
     if (json is Map<String, dynamic> && json.containsKey('previewURL')) {
       return ImageItem.fromJson(json) as T;
     } else if (json is Map<String, dynamic> && json.containsKey('videos')) {

@@ -66,7 +66,7 @@ class PixabayApi {
         "id": id ?? '',
         "order": popular ? 'popular' : 'latest',
         'page': page ?? 1,
-        'per_page': perPage ?? 20,
+        'per_page': perPage ?? 40,
         'editors_choice': editorChoice,
         'category': category ?? '',
       };

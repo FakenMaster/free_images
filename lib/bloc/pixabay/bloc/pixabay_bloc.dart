@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:free_images/api/pixabay/pixabay_api.dart';
+import 'package:free_images/model/pixabay/image_item.dart';
 import 'package:free_images/model/pixabay/pixabay_model.dart';
 import 'package:free_images/repository/pixabay/pixabay_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -21,24 +23,19 @@ part 'pixabay_state.dart';
 // }
 
 class PixabayBloc {
-  PublishSubject<PixabayEvent> _onTextChange;
+  BehaviorSubject<PixabayEvent> _onTextChange;
   Stream<PixabayState> stream;
   PixabayRepository _pixabayRepository;
-
+  List<ImageItem> images = [];
   PixabayBloc() {
     _pixabayRepository = PixabayRepository(PixabayApi.getInstance());
-    _onTextChange = PublishSubject<PixabayEvent>();
+    _onTextChange = BehaviorSubject<PixabayEvent>();
     stream = _onTextChange
-        .distinct((previous, next) {
-          print('之前：$previous');
-          print('之后：$next');
-          return previous == next;
-        })
+        .distinct()
         .debounceTime(Duration(milliseconds: 500))
         .switchMap<PixabayState>((event) {
-          return _search(event);
-        })
-        .startWith(PixabayInitial());
+      return _search(event);
+    }).startWith(PixabayInitial());
   }
 
   search(
@@ -57,10 +54,17 @@ class PixabayBloc {
         category: category));
   }
 
+  loadMore() {
+    PixabaySearchEvent lastEvent = _onTextChange.value;
+    _onTextChange.add(lastEvent.copyWith(page: lastEvent.page + 1));
+  }
+
   Stream<PixabayState> _search(PixabayEvent event) async* {
     if (event is PixabaySearchEvent) {
-      yield PixabayLoadingState();
-
+      if (event.page == 1) {
+        images.clear();
+        yield PixabayLoadingState();
+      }
       try {
         var result = await (event.searchImage
             ? _pixabayRepository.searchImage(
@@ -69,10 +73,13 @@ class PixabayBloc {
                 editorChoice: event.editorChoice,
                 popular: event.popular,
                 category: event.category,
+                perPage: kIsWeb?100:40,
               )
             : _pixabayRepository.searchVideo());
         if (result.hits?.isNotEmpty ?? false) {
-          yield PixabayResultState(result);
+          yield PixabayResultState(
+              result..hits = (images..addAll(result.hits as List<ImageItem>)),
+              event.page);
         } else {
           yield PixabayEmptyState();
         }

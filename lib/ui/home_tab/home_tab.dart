@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:free_images/ui/pixabay/pixabay_search_widget.dart';
+import 'package:free_images/ui/pixabay/pixabay_tab_widget.dart';
 
 class HomeTabWidget extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _HomeTabWidgetState extends State<HomeTabWidget> {
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           if (index == 0) {
-            return PixabaySearchWidget();
+            return PixabayTabWidget();
           }
           return Center(
             child: Text(titles[index]),

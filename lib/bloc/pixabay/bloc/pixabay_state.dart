@@ -21,10 +21,11 @@ class PixabayEmptyState extends PixabayState{
 
 class PixabayResultState extends PixabayState{
   final PixabayModel data;
+  final int page;
 
-  PixabayResultState(this.data);
+  PixabayResultState(this.data,this.page);
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [data,page];
 }
 
 class PixabayErrorState extends PixabayState {

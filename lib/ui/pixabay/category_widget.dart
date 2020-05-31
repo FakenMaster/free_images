@@ -1,10 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:free_images/api/pixabay/pixabay_api.dart';
-import 'package:free_images/util/styles.dart';
+import 'package:free_images/route/image_route.gr.dart';
 import 'package:free_images/util/util.dart';
 
-class CategoryWidget extends StatelessWidget {
+class CategoryWidget extends StatefulWidget {
+  @override
+  _CategoryWidgetState createState() => _CategoryWidgetState();
+}
+
+class _CategoryWidgetState extends State<CategoryWidget>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +42,12 @@ class CategoryWidget extends StatelessWidget {
                     for (String category in PixabayApi.categories)
                       Material(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            ExtendedNavigator.of(context).pushNamed(
+                                Routes.pixabaySearchWidget,
+                                arguments: PixabaySearchWidgetArguments(
+                                    category: category));
+                          },
                           child: Stack(
                             children: <Widget>[
                               Positioned.fill(
@@ -70,4 +82,7 @@ class CategoryWidget extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

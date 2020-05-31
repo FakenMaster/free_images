@@ -15,10 +15,27 @@ class PixabaySearchEvent extends PixabayEvent {
   PixabaySearchEvent(
       {this.searchImage = true,
       this.term,
-      this.page,
+      this.page = 1,
       this.editorChoice,
       this.popular,
       this.category});
+
+  PixabaySearchEvent copyWith(
+      {bool searchImage,
+      String term,
+      int page,
+      bool editorChoice,
+      bool popular,
+      String category}) {
+    return PixabaySearchEvent(
+      searchImage: searchImage ?? this.searchImage,
+      term: term ?? this.term,
+      page: page ?? this.page,
+      editorChoice: editorChoice ?? this.editorChoice,
+      popular: popular ?? this.popular,
+      category: category ?? this.category,
+    );
+  }
 
   @override
   List<Object> get props =>

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:free_images/ui/pixabay/category_widget.dart';
 import 'package:free_images/ui/pixabay/editor_choice_widget.dart';
-import 'package:free_images/ui/pixabay/home_search_widget.dart';
+import 'package:free_images/ui/pixabay/home_widget.dart';
 import 'package:free_images/ui/widget/page_indicator.dart';
 
 class PixabayMainWidget extends StatefulWidget {
@@ -38,7 +38,7 @@ class _PixabayMainWidgetState extends State<PixabayMainWidget> {
           controller: pageController,
           children: [
             EditorChoiceWidget(),
-            HomeSearchWidget(),
+            HomeWidget(),
             CategoryWidget(),
           ],
           onPageChanged: (index) {

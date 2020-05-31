@@ -8,28 +8,31 @@ import 'package:free_images/model/pixabay/pixabay_model.dart';
 import 'package:free_images/route/image_route.gr.dart';
 import 'package:rxdart/rxdart.dart';
 
-class HomeSearchWidget extends StatefulWidget {
+class HomeWidget extends StatefulWidget {
   @override
-  _HomeSearchWidgetState createState() => _HomeSearchWidgetState();
+  _HomeWidgetState createState() => _HomeWidgetState();
 }
 
 /// 背景图片数据保存到本地，使用SharedPreference或者文件或者数据库，个人推荐数据库，上次那个hive吧
-class _HomeSearchWidgetState extends State<HomeSearchWidget> {
+class _HomeWidgetState extends State<HomeWidget>
+    with AutomaticKeepAliveClientMixin {
   PixabayBloc bloc;
   List<ImageItem> items = [];
   int page = 1;
   BehaviorSubject<int> behaviorSubject;
+  TextEditingController textController;
 
   @override
   void initState() {
     super.initState();
+    textController = TextEditingController();
     bloc = PixabayBloc();
-    //Future.delayed(Duration(seconds: 1)).then((value) => bloc.search());
     behaviorSubject = BehaviorSubject.seeded(0);
   }
 
   @override
   void dispose() {
+    textController.dispose();
     bloc.dispose();
     behaviorSubject.close();
     super.dispose();
@@ -43,43 +46,16 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
       body: SafeArea(
         child: Stack(
           children: [
-            StreamBuilder<PixabayState>(
-              stream: bloc.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data is PixabayResultState) {
-                  PixabayModel<ImageItem> model =
-                      (snapshot.data as PixabayResultState).data;
-                  items.addAll(model.hits);
-                  return StreamBuilder(
-                      stream: behaviorSubject.stream,
-                      builder: (context, snapshot) {
-                        ImageItem imageItem = items[behaviorSubject.value];
-                        return GestureDetector(
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            ExtendedNavigator.of(context).pushNamed(
-                                Routes.viewImageWidget,
-                                arguments: ViewImageWidgetArguments(
-                                    heroTag: imageItem.largeImageUrl,
-                                    url: imageItem.largeImageUrl));
-                          },
-                          child: Image.network(
-                            imageItem.webformatUrl,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        );
-                      });
-                }
-                return Container();
-              },
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/home_sunset.jpg',
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned(
               left: 16,
               top: 16,
               right: 16,
-              //bottom: 16,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -96,7 +72,7 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
               ),
             ),
             Align(
-              alignment: Alignment(0, -0.3),
+              alignment: Alignment(0, -0.4),
               child: Container(
                 margin: EdgeInsets.all(16),
                 padding: EdgeInsets.symmetric(horizontal: 8),
@@ -105,10 +81,12 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        controller: textController,
                         autofocus: false,
                         textInputAction: TextInputAction.search,
                         cursorColor: Colors.white.withOpacity(0.8),
                         cursorWidth: 1,
+                        onSubmitted: _search,
                         decoration: InputDecoration(
                           hintText: 'Search free images...',
                           hintStyle: TextStyle(
@@ -124,9 +102,15 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
                     SizedBox(
                       width: 16,
                     ),
-                    Icon(
-                      Icons.search,
-                      color: Colors.white,
+                    
+                    GestureDetector(
+                      onTap: () {
+                        _search(textController.text);
+                      },
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
                     )
                   ],
                 ),
@@ -137,4 +121,13 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> {
       ),
     );
   }
+
+  _search(String term) {
+    ExtendedNavigator.of(context).pushNamed(Routes.pixabaySearchWidget,
+        arguments: PixabaySearchWidgetArguments(
+            term: (term?.isNotEmpty ?? false) ? term : null));
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
