@@ -1,2 +1,5 @@
 Feature next: pixabay search + loadmore + save image.
 ps: 1. add database cache in phone.
+
+1.查看大图时，小图和大图的切换不要闪
+2.一倍缩放时，滑动图片超过假如100px时，退出查看图片页面
