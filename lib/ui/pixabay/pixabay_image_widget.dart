@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:free_images/model/pixabay/image_item.dart';
 import 'package:free_images/model/pixabay/pixabay_model.dart';
 import 'package:free_images/route/image_route.gr.dart';
-import 'package:free_images/ui/widget/loading_widget.dart';
 
 class PixabayImageWidget extends StatefulWidget {
   final PixabayModel<ImageItem> images;
@@ -35,7 +34,7 @@ class _PixabayImageWidgetState extends State<PixabayImageWidget> {
       slivers: [
         SliverToBoxAdapter(
           child: Expanded(
-                      child: GridView.builder(
+            child: GridView.builder(
               controller: controller,
               itemBuilder: (context, index) {
                 final item = widget.images.hits[index];
@@ -45,7 +44,7 @@ class _PixabayImageWidgetState extends State<PixabayImageWidget> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        FocusScope.of(context).requestFocus();
+                        FocusScope.of(context).unfocus();
                         ExtendedNavigator.of(context).pushNamed(
                             Routes.viewImageWidget,
                             arguments: ViewImageWidgetArguments(

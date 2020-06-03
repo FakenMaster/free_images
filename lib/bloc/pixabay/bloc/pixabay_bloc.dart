@@ -27,6 +27,7 @@ class PixabayBloc {
   Stream<PixabayState> stream;
   PixabayRepository _pixabayRepository;
   List<ImageItem> images = [];
+
   PixabayBloc() {
     _pixabayRepository = PixabayRepository(PixabayApi.getInstance());
     _onTextChange = BehaviorSubject<PixabayEvent>();
@@ -61,7 +62,7 @@ class PixabayBloc {
 
   Stream<PixabayState> _search(PixabayEvent event) async* {
     if (event is PixabaySearchEvent) {
-      if (event.page == 1) {
+      if (event.page ?? 1 == 1) {
         images.clear();
         yield PixabayLoadingState();
       }
@@ -73,7 +74,7 @@ class PixabayBloc {
                 editorChoice: event.editorChoice,
                 popular: event.popular,
                 category: event.category,
-                perPage: kIsWeb?100:40,
+                perPage: kIsWeb ? 100 : 40,
               )
             : _pixabayRepository.searchVideo());
         if (result.hits?.isNotEmpty ?? false) {
