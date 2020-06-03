@@ -1,5 +1,6 @@
 Feature next: pixabay search + loadmore + save image.
 ps: 1. add database cache in phone.
 
+0.错乱的图片展示：目前解决办法：动态计算每个图片的大小，放入List<List>作为ListView的Item，然后使用ListView实现（只能算替代方法1，不能算真正的解决方案）
 1.查看大图时，小图和大图的切换不要闪
 2.一倍缩放时，滑动图片超过假如100px时，退出查看图片页面
