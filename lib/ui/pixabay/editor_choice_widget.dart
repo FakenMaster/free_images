@@ -8,7 +8,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:free_images/bloc/pixabay/bloc/pixabay_bloc.dart';
 import 'package:free_images/model/pixabay/image_item.dart';
-import 'package:free_images/model/pixabay/pixabay_model.dart';
 import 'package:free_images/route/image_route.gr.dart';
 import 'package:free_images/util/util.dart';
 import 'package:rxdart/rxdart.dart';
@@ -145,6 +144,7 @@ class _EditorChoiceWidgetState extends State<EditorChoiceWidget>
 
                     if (snapshot.hasData) {
                       if (state is PixabayResultState) {
+                        return _staggerGridView2(state.data.hits);
                         return _staggerGridView(state.data.hits);
                       } else if (state is PixabayLoadingState) {
                         return Center(
@@ -159,6 +159,99 @@ class _EditorChoiceWidgetState extends State<EditorChoiceWidget>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _staggerGridView2(List<ImageItem> data) {
+    List<List<ImageItem>> list = [];
+    for (int i = 0; i < data.length; i += 2) {
+      List<ImageItem> items = []..addAll(data.sublist(i, i + 2));
+      list.add(items);
+    }
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        List<ImageItem> item = list[index];
+        return Column(
+          children: [
+            Container(
+              height: 100,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: item[0].webformatWidth,
+                    child: AspectRatio(
+                        aspectRatio:
+                            item[0].webformatWidth / item[0].webformatHeight,
+                        child: imageItemWidget(item[0])),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Expanded(
+                    flex: item[1].webformatWidth,
+                    child: AspectRatio(
+                        aspectRatio:
+                            item[1].webformatWidth / item[1].webformatHeight,
+                        child: imageItemWidget(item[1])),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 4,
+            )
+          ],
+        );
+      },
+      itemCount: list.length,
+    );
+    return GridView.builder(
+      controller: scrollController,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 170, crossAxisSpacing: 4, mainAxisSpacing: 4),
+      itemBuilder: (context, index) {
+        ImageItem imageItem = data[index];
+        return GestureDetector(
+          onTap: () {
+            ExtendedNavigator.of(context).pushNamed(Routes.viewImageWidget,
+                arguments: ViewImageWidgetArguments(
+                  url: imageItem.largeImageUrl,
+                  previewUrl: imageItem.webformatUrl,
+                ));
+          },
+          child: CachedNetworkImage(
+            imageUrl: data[index].webformatUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) {
+              return Container(
+                color: PixabayStyles.colorLight,
+              );
+            },
+          ),
+        );
+      },
+      itemCount: data.length,
+    );
+  }
+
+  Widget imageItemWidget(ImageItem imageItem) {
+    return GestureDetector(
+      onTap: () {
+        ExtendedNavigator.of(context).pushNamed(Routes.viewImageWidget,
+            arguments: ViewImageWidgetArguments(
+              url: imageItem.largeImageUrl,
+              previewUrl: imageItem.webformatUrl,
+            ));
+      },
+      child: CachedNetworkImage(
+        imageUrl: imageItem.webformatUrl,
+        fit: BoxFit.cover,
+        placeholder: (context, url) {
+          return Container(
+            color: PixabayStyles.colorLight,
+          );
+        },
       ),
     );
   }

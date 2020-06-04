@@ -62,7 +62,7 @@ class PixabayBloc {
 
   Stream<PixabayState> _search(PixabayEvent event) async* {
     if (event is PixabaySearchEvent) {
-      if (event.page ?? 1 == 1) {
+      if ((event.page ?? 1) == 1) {
         images.clear();
         yield PixabayLoadingState();
       }
