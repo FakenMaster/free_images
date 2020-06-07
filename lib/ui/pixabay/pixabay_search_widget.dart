@@ -1,11 +1,8 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:free_images/bloc/pixabay/bloc/pixabay_bloc.dart';
-import 'package:free_images/model/pixabay/image_item.dart';
-import 'package:free_images/route/image_route.gr.dart';
+import 'package:free_images/ui/pixabay/pixabay_list_widget.dart';
 import 'package:free_images/util/util.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -60,15 +57,7 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
       ..addListener(() {
         ScrollPosition position = scrollController.position;
         if (position.maxScrollExtent - position.pixels < 300) {
-          //bloc.loadMore();
-          print('最大滑动距离:${position.maxScrollExtent},当前滑动距离:${position.pixels}');
           search(refresh: false);
-//          bloc.search(
-//              term: term,
-//              popular: selectedIndexSubject.value == 0,
-//              editorChoice: false,
-//              category: term == null ? widget.category : '',
-//              page: imageSizeSubject.value.page + 1);
         }
       });
     bloc = PixabayBloc();
@@ -82,12 +71,6 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
     });
     selectedIndexSubject = BehaviorSubject()
       ..distinct().listen((index) {
-//        bloc.search(
-//          term: '',
-//          popular: index == 0,
-//          editorChoice: false,
-//          category: term == null ? widget.category : '',
-//        );
         search();
       });
     selectedIndexSubject
@@ -222,7 +205,8 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
                       print('有新数据啦');
                       if (snapshot.hasData) {
                         if (state is PixabayResultState) {
-                          return _staggerGridView(state.data.hits);
+                          return PixabayListWidget(
+                              state.data.hits, scrollController);
                         } else if (state is PixabayLoadingState) {
                           return Center(
                             child: CircularProgressIndicator(),
@@ -347,36 +331,6 @@ class _PixabaySearchWidgetState extends State<PixabaySearchWidget> {
     FocusScope.of(context).unfocus();
     setState(() {});
     search();
-  }
-
-  Widget _staggerGridView(List<ImageItem> data) {
-    return GridView.builder(
-      controller: scrollController,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 170, crossAxisSpacing: 4, mainAxisSpacing: 4),
-      itemBuilder: (context, index) {
-        ImageItem imageItem = data[index];
-        return GestureDetector(
-          onTap: () {
-            ExtendedNavigator.of(context).pushNamed(Routes.viewImageWidget,
-                arguments: ViewImageWidgetArguments(
-                  url: imageItem.largeImageUrl,
-                  previewUrl: imageItem.webformatUrl,
-                ));
-          },
-          child: CachedNetworkImage(
-            imageUrl: data[index].webformatUrl,
-            fit: BoxFit.cover,
-            placeholder: (context, url) {
-              return Container(
-                color: PixabayStyles.colorLight,
-              );
-            },
-          ),
-        );
-      },
-      itemCount: data.length,
-    );
   }
 
   Widget tabItem(String text, int index) {

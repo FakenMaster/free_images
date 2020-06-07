@@ -14,10 +14,10 @@ import 'package:free_images/ui/pixabay/pixabay_main_widget.dart';
 import 'package:free_images/ui/pixabay/pixabay_search_widget.dart';
 
 abstract class Routes {
-  static const homeTab = '/';
+  static const homeTab = '/home-tab';
   static const pixabayTabWidget = '/pixabay-tab-widget';
   static const viewImageWidget = '/view-image-widget';
-  static const pixabayMainWidget = '/pixabay-main-widget';
+  static const pixabayMainWidget = '/';
   static const pixabaySearchWidget = '/pixabay-search-widget';
   static const all = {
     homeTab,

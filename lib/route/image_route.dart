@@ -7,11 +7,12 @@ import 'package:free_images/ui/widget/view_image_widget.dart';
 
 @MaterialAutoRouter()
 class $ImageRouter {
-  @initial
+  //@initial
   HomeTabWidget homeTab;
 
   PixabayTabWidget pixabayTabWidget;
   ViewImageWidget viewImageWidget;
+  @initial
   PixabayMainWidget pixabayMainWidget;
   PixabaySearchWidget pixabaySearchWidget;
 }

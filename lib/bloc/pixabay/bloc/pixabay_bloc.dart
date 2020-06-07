@@ -49,7 +49,7 @@ class PixabayBloc {
     _onTextChange.add(PixabaySearchEvent(
         searchImage: searchImage,
         term: term,
-        page: page,
+        page: page ?? 1,
         editorChoice: editorChoice,
         popular: popular,
         category: category));
