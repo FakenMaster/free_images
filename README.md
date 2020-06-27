@@ -1,4 +1,4 @@
 # free_images
 
-use pixabay、unsplash、giphy api to search free images。
-Feel free to use it!
+use pixabay api to search free images。
+[Google Play address]("https://play.google.com/store/apps/details?id=com.faken.free_images").
